@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Latihan Soal Modul UT - Strategi Pembelajaran Biologi</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background-color: #ffe6f2;
+      color: #4b2354;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      flex-direction: column;
+    }
+    .container {
+      background-color: #fff0f7;
+      border-radius: 20px;
+      box-shadow: 0 4px 10px rgba(255, 105, 180, 0.3);
+      padding: 30px;
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+      animation: fadeIn 0.8s ease-in;
+    }
+    h1 {
+      color: #ff66b3;
+      font-size: 1.8rem;
+      margin-bottom: 15px;
+    }
+    button {
+      background-color: #ff99cc;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 20px;
+      cursor: pointer;
+      transition: 0.3s;
+      font-size: 1rem;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #ff66b3;
+    }
+    .question {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .option {
+      background-color: #ffe6f2;
+      border: 2px solid #ff99cc;
+      border-radius: 10px;
+      margin: 5px 0;
+      padding: 10px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .option:hover {
+      background-color: #ffccdf;
+    }
+    .feedback {
+      margin-top: 10px;
+      font-style: italic;
+    }
+    .hidden {
+      display: none;
+    }
+    .timer {
+      background-color: #ffccdf;
+      border-radius: 10px;
+      padding: 5px 10px;
+      display: inline-block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="start-page">
+    <h1>Latihan Soal Modul UT<br>Strategi Pembelajaran Biologi</h1>
+    <p>Uji pemahamanmu tentang strategi pembelajaran biologi!</p>
+    <button onclick="startQuiz()">Mulai Kuis</button>
+  </div>
+
+  <div class="container hidden" id="quiz-page">
+    <div class="timer" id="timer">Waktu: 10:00</div>
+    <div id="question-container"></div>
+    <div class="feedback" id="feedback"></div>
+    <button id="next-btn" onclick="nextQuestion()">Soal Berikutnya</button>
+  </div>
+
+  <div class="container hidden" id="result-page">
+    <h1>Hasil Kuis</h1>
+    <p id="score"></p>
+    <p id="summary"></p>
+    <button onclick="restartQuiz()">Ulangi Kuis</button>
+  </div>
+
+  <script>
+    const questions = [
+      {question:"1. Strategi pembelajaran biologi yang berpusat pada peserta didik dikenal dengan istilah...",options:["Teacher Centered Learning","Student Centered Learning","Contextual Teaching","Direct Instruction"],correct:1,explanation:"Student Centered Learning menekankan peran aktif mahasiswa dalam proses pembelajaran."},
+      {question:"2. Model pembelajaran inkuiri menekankan pada...",options:["Penyampaian informasi oleh dosen","Penemuan konsep oleh mahasiswa","Hafalan materi","Ceramah satu arah"],correct:1,explanation:"Inkuiri mendorong mahasiswa menemukan konsep melalui pengamatan dan eksperimen."},
+      {question:"3. Tujuan utama strategi pembelajaran kooperatif adalah...",options:["Kompetisi antar mahasiswa","Kemandirian penuh","Kerja sama untuk mencapai tujuan belajar","Pembelajaran individual"],correct:2,explanation:"Strategi kooperatif menekankan kerja sama kelompok agar semua anggota memahami materi."},
+      {question:"4. Dalam pendekatan konstruktivistik, pengetahuan dibangun melalui...",options:["Ceramah dosen","Pengalaman belajar dan interaksi sosial","Buku teks","Latihan hafalan"],correct:1,explanation:"Konstruktivisme menekankan pengalaman langsung dan interaksi sosial dalam membangun pengetahuan."},
+      {question:"5. Strategi pembelajaran berbasis masalah (PBL) bertujuan untuk...",options:["Menghafal konsep biologi","Memecahkan masalah nyata melalui diskusi","Menyalin catatan","Meniru eksperimen dosen"],correct:1,explanation:"PBL menuntut mahasiswa memecahkan masalah nyata yang relevan dengan kehidupan."},
+      {question:"6. Evaluasi formatif dilakukan untuk...",options:["Menentukan nilai akhir","Memberikan umpan balik selama proses belajar","Membandingkan antar kelas","Menghukum peserta didik"],correct:1,explanation:"Evaluasi formatif membantu memperbaiki proses pembelajaran sebelum penilaian akhir."},
+      {question:"7. Strategi pembelajaran biologi yang efektif sebaiknya memperhatikan...",options:["Gaya belajar mahasiswa","Minat dosen","Jumlah soal ujian","Ketersediaan laboratorium saja"],correct:0,explanation:"Menyesuaikan gaya belajar mahasiswa meningkatkan efektivitas pembelajaran."},
+      {question:"8. Pembelajaran blended learning menggabungkan...",options:["Teori dan praktik","Tatap muka dan online learning","Kelas dan laboratorium","Kognitif dan afektif"],correct:1,explanation:"Blended learning menggabungkan pertemuan tatap muka dan pembelajaran daring."},
+      {question:"9. Dalam strategi pembelajaran kolaboratif, peran dosen adalah...",options:["Sebagai fasilitator dan pembimbing","Sebagai pusat informasi","Sebagai penguji utama","Sebagai penilai tunggal"],correct:0,explanation:"Dosen berperan sebagai fasilitator agar mahasiswa dapat bekerja sama secara efektif."},
+      {question:"10. Ciri utama strategi pembelajaran aktif adalah...",options:["Mahasiswa pasif mendengarkan dosen","Mahasiswa terlibat langsung dalam kegiatan belajar","Fokus pada ujian akhir","Menghafal tanpa memahami"],correct:1,explanation:"Pembelajaran aktif menekankan keterlibatan langsung mahasiswa dalam proses belajar."}
+    ];
+
+    let currentQuestion=0,score=0,timer,timeLeft=600;
+    const startPage=document.getElementById("start-page"),
+          quizPage=document.getElementById("quiz-page"),
+          resultPage=document.getElementById("result-page"),
+          questionContainer=document.getElementById("question-container"),
+          feedback=document.getElementById("feedback"),
+          timerDisplay=document.getElementById("timer");
+
+    function startQuiz(){
+      startPage.classList.add("hidden");
+      quizPage.classList.remove("hidden");
+      startTimer();
+      showQuestion();
+    }
+
+    function startTimer(){
+      timer=setInterval(()=>{
+        timeLeft--;
+        const m=Math.floor(timeLeft/60),s=timeLeft%60;
+        timerDisplay.textContent=`Waktu: ${m}:${s<10?"0":""}${s}`;
+        if(timeLeft<=0){clearInterval(timer);endQuiz();}
+      },1000);
+    }
+
+    function showQuestion(){
+      feedback.textContent="";
+      const q=questions[currentQuestion];
+      questionContainer.innerHTML=\`<div class="question">\${q.question}</div>\`+
+      q.options.map((o,i)=>\`<div class="option" onclick="selectOption(\${i})">\${o}</div>\`).join("");
+    }
+
+    function selectOption(i){
+      const q=questions[currentQuestion];
+      if(i===q.correct){score++;feedback.style.color="#ff66b3";feedback.textContent="✅ Jawaban benar! Hebat!";}
+      else{feedback.style.color="#ff3366";feedback.textContent="❌ Salah! "+q.explanation;}
+      document.querySelectorAll(".option").forEach(o=>o.style.pointerEvents="none");
+    }
+
+    function nextQuestion(){
+      if(currentQuestion<questions.length-1){currentQuestion++;showQuestion();}
+      else endQuiz();
+    }
+
+    function endQuiz(){
+      clearInterval(timer);
+      quizPage.classList.add("hidden");
+      resultPage.classList.remove("hidden");
+      const wrong=questions.length-score;
+      const minutesLeft=Math.floor(timeLeft/60);
+      document.getElementById("score").innerHTML=\`Skor akhir: <b>\${score}/\${questions.length}</b><br>Benar: \${score} | Salah: \${wrong}<br>Sisa waktu: \${minutesLeft} menit\`;
+      document.getElementById("summary").innerHTML="<b>Ringkasan materi:</b><br>Pelajari kembali konsep <i>Student Centered Learning</i>, <i>PBL</i>, dan pendekatan konstruktivistik.";
+    }
+
+    function restartQuiz(){
+      currentQuestion=0;score=0;timeLeft=600;
+      resultPage.classList.add("hidden");
+      startPage.classList.remove("hidden");
+    }
+  </script>
+
+</body>
+</html>
